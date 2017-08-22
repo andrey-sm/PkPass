@@ -16,6 +16,4 @@ interface Settings {
     fun isCondensedModeEnabled(): Boolean
 
     fun isAutomaticLightEnabled(): Boolean
-
-//    fun getNightMode(): Int
 }

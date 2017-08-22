@@ -103,7 +103,6 @@ abstract class PassViewHolder(val view: CardView) : RecyclerView.ViewHolder(view
         else -> null
     }
 
-    /////////////@Visibility
     protected open fun getVisibilityForGlobalAndLocal(global: Boolean, local: Boolean) = when {
         global -> GONE
         local -> VISIBLE
