@@ -1,20 +1,551 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pro.smartum.pkpass">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!--<uses-permission-sdk-23 android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />-->
+    <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/authority_fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <activity android:name=".activity.TouchImageActivity"/>
+
+        <activity
+            android:name=".activity.PassViewActivity"
+            android:theme="@style/AppBaseThemeNoActionbar"
+            android:label="@string/app_name"
+            android:parentActivityName=".activity.MainActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity"/>
+        </activity>
+
+        <!--<activity
+            android:name="FullscreenBarcodeActivity"
+            android:label="@string/app_name"/>-->
+
+
+
+        <activity
+            android:name="pro.smartum.pkpass.activity.PassImportActivity"
+            tools:ignore="ExportedActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/vnd.apple.pkpass" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/vndapplepkpass" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/vnd-com.apple.pkpass" />
+            </intent-filter>
+
+            <!-- pkpass -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/vnd.apple.pkpass" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/vnd-com.apple.pkpass" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+                <data
+                    android:host="*"
+                    android:mimeType="*/*"
+                    android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.pkpass"
+                    android:scheme="content" />
+            </intent-filter>
+
         </activity>
     </application>
 

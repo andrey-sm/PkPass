@@ -25,13 +25,34 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:cardview-v7:$support_version"
+    compile "com.android.support:design:$support_version"
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+
+    // cannot use this new version: https://github.com/zxing/zxing/issues/165
+    // WARNING: might work on some devices or the emulator - but fails on others
+    compile 'com.google.zxing:core:3.3.0'
+
+    compile 'com.squareup.moshi:moshi:1.4.0'
+
+    compile 'net.lingala.zip4j:zip4j:1.3.2'
+
+    compile 'com.github.hotchemi:permissionsdispatcher:2.3.2'
+    kapt 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
+
+    /* Tests */
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {
     mavenCentral()

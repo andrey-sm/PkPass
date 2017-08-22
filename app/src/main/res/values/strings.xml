@@ -1,3 +1,46 @@
 <resources>
-    <string name="app_name">PkPassAndroid</string>
+    <string name="app_name">PkPass</string>
+
+    <string name="please_wait">please wait - shouldn\'t be long</string>
+    <string name="topic_new">new</string>
+
+    <string name="image_import">Image Import</string>
+    <string name="pdf_import">PDF Import</string>
+
+    <string name="field_source">source</string>
+    <string name="field_note">note</string>
+    <string name="field_advice_label">advice</string>
+    <string name="field_advice_text">demand esPass or Passbook from your vendor</string>
+
+    <string name="field_source_image">Image</string>
+    <string name="field_note_image">This is imported from a image - not a real pass</string>
+
+    <string name="field_source_pdf">PDF</string>
+    <string name="field_note_pdf">This is imported from a PDF - not a real pass</string>
+
+    <string name="unzip_pass_dialog_title">Opening Passbook</string>
+    <string name="unzip_pass_dialog_message">Please wait...</string>
+    <string name="invalid_passbook_title">Invalid Passbook</string>
+
+    <string name="menu_delete">"delete"</string>
+    <string name="menu_share">"share"</string>
+
+
+    <string name="boarding_pass">"Boarding Pass"</string>
+    <string name="category_event">"Event"</string>
+    <string name="category_coupon">"Coupon"</string>
+    <string name="category_storecard">"Store Card"</string>
+    <string name="category_generic">"generic"</string>
+    <string name="category_none">"no Category"</string>
+    <string name="categories_voucher">voucher</string>
+
+    <string name="type">Type</string>
+    <string name="more">MORE</string>
+    <string name="less">LESS</string>
+    <string name="barcode">"barcode"</string>
+
+    <string name="pass_to_calendar">"to Calendar"</string>
+    <string name="pass_directions">"Navigate"</string>
+
+
 </resources>
