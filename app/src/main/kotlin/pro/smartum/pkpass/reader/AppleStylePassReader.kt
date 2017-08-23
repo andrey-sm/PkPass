@@ -4,19 +4,18 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
-import org.threeten.bp.DateTimeException
 import org.threeten.bp.ZonedDateTime
 import pro.smartum.pkpass.R
-import pro.smartum.pkpass.function.getHumanCategoryString
+import pro.smartum.pkpass.util.function.getHumanCategoryString
 import pro.smartum.pkpass.function.parseColor
-import pro.smartum.pkpass.function.readJSONSafely
+import pro.smartum.pkpass.util.function.readJSONSafely
 import pro.smartum.pkpass.model.AppleStylePassTranslation
 import pro.smartum.pkpass.model.PassBitmapDefinitions
 import pro.smartum.pkpass.model.PassDefinitions
 import pro.smartum.pkpass.model.pass.*
+import pro.smartum.pkpass.util.Logger
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.Charset
@@ -51,7 +50,7 @@ object AppleStylePassReader {
             val plainJsonString = AppleStylePassTranslation.readFileAsStringGuessEncoding(file)
             pass_json = readJSONSafely(plainJsonString)
         } catch (e: Exception) {
-            Log.i("aLog", "PassParse Exception " + e)
+            Logger.e(javaClass, "PassParse Exception", e)
         }
 
         if (pass_json == null) {
@@ -74,8 +73,7 @@ object AppleStylePassReader {
         }
 
         if (pass_json == null) {
-            Log.w("aLog", "could not load pass.json from passcode ")
-            /////App.tracker.trackEvent("problem_event", "pass", "without_pass_json", null)
+            Logger.e(javaClass, "could not load pass.json from passcode")
             return null
         }
 
@@ -84,7 +82,6 @@ object AppleStylePassReader {
             if (barcode_json != null) {
                 val barcodeFormatString = barcode_json.getString("format")
 
-                ///////////////App.tracker.trackEvent("measure_event", "barcode_format", barcodeFormatString, 0L)
                 val barcodeFormat = BarCode.getFormatFromString(barcodeFormatString)
                 val barCode = BarCode(barcodeFormat, barcode_json.getString("message"))
                 pass.barCode = barCode
@@ -95,6 +92,7 @@ object AppleStylePassReader {
             }
             // TODO should check a bit more with barcode here - this can be dangerous
         } catch (ignored: Exception) {
+            ignored.printStackTrace()
         }
 
         if (pass_json.has("relevantDate")) {
@@ -103,26 +101,17 @@ object AppleStylePassReader {
             } catch (e: JSONException) {
                 // be robust when it comes to bad dates - had a RL crash with "2013-12-25T00:00-57:00" here
                 // OK then we just have no date here
-                e.printStackTrace()
-                /////////////App.tracker.trackException("problem parsing relevant date", e, false)
-            } catch (e: DateTimeException) {
-                e.printStackTrace()
-                //App.tracker.trackException("problem parsing relevant date", e, false)
+                Logger.e(javaClass, "problem parsing relevant date", e)
             }
-
         }
 
         if (pass_json.has("expirationDate")) {
             try {
                 pass.validTimespans = listOf(PassImpl.TimeSpan(to = ZonedDateTime.parse(pass_json.getString("expirationDate"))))
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 // be robust when it comes to bad dates - had a RL crash with "2013-12-25T00:00-57:00" here
                 // OK then we just have no date here
-                e.printStackTrace()
-                //App.tracker.trackException("problem parsing expiration date", e, false)
-            } catch (e: DateTimeException) {
-                e.printStackTrace()
-                //App.tracker.trackException("problem parsing expiration date", e, false)
+                Logger.d(javaClass, "problem parsing expiration date")
             }
 
         }
@@ -143,14 +132,14 @@ object AppleStylePassReader {
                 location.lat = obj.getDouble("latitude")
                 location.lon = obj.getDouble("longitude")
 
-                if (obj.has("relevantText")) {
+                if (obj.has("relevantText"))
                     location.name = translation.translate(obj.getString("relevantText"))
-                }
 
                 locations.add(location)
             }
 
         } catch (ignored: JSONException) {
+            ignored.printStackTrace()
         }
 
         pass.locations = locations
@@ -198,12 +187,12 @@ object AppleStylePassReader {
 
         try {
             pass.creator = pass_json.getString("organizationName")
-            ///////////////////////App.tracker.trackEvent("measure_event", "organisation_parse", pass.creator, 1L)
         } catch (ignored: JSONException) {
             // ok - we have no organisation - big deal ..-)
+            ignored.printStackTrace()
         }
 
-        /////////////////////// TODO //// ApplePassbookQuirkCorrector(App.tracker).correctQuirks(pass)
+        // TODO [AK] ApplePassbookQuirkCorrector(App.tracker).correctQuirks(pass)
 
         return pass
     }
@@ -232,14 +221,12 @@ object AppleStylePassReader {
                     list.add(field)
 
                 } catch (e: JSONException) {
-                    Log.w("aLog", "could not process PassField from JSON for $fieldsName cause:$e")
+                    Logger.e(javaClass, "could not process PassField from JSON for $fieldsName cause:$e")
                 }
-
             }
         } catch (e: JSONException) {
-            Log.w("aLog", "could not process PassFields $fieldsName from JSON$e")
+            Logger.e(javaClass, "could not process PassFields $fieldsName from JSON$e")
         }
-
     }
 
     private fun findLocalizedPath(path: File, language: String): String? {
@@ -247,14 +234,12 @@ object AppleStylePassReader {
         val localized = File(path, language + ".lproj")
 
         if (localized.exists() && localized.isDirectory) {
-            /////////////////////////////App.tracker.trackEvent("measure_event", "pass", language + "_native_lproj", null)
             return localized.path
         }
 
         val fallback = File(path, "en.lproj")
 
         if (fallback.exists() && fallback.isDirectory) {
-            ////////////////////App.tracker.trackEvent("measure_event", "pass", "en_lproj", null)
             return fallback.path
         }
 
@@ -271,8 +256,8 @@ object AppleStylePassReader {
                 return json.getString(key)
             } catch (e: JSONException) {
                 // some passes just do not have the field
+                e.printStackTrace()
             }
-
         }
         return null
     }
@@ -282,9 +267,8 @@ object AppleStylePassReader {
             try {
                 callback.onString(json.getString(key))
             } catch (e: JSONException) {
-                // some passes just do not have the field
+                e.printStackTrace()
             }
-
         }
     }
 
@@ -296,12 +280,10 @@ object AppleStylePassReader {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
     }
 
     private fun findBitmap(path: File, localizedPath: String?, bitmap: String): Bitmap? {
-
         val searchList = ArrayList<File>()
         if (localizedPath != null) {
             searchList.add(File(localizedPath, "$bitmap@2x.png"))
@@ -312,16 +294,17 @@ object AppleStylePassReader {
         searchList.add((File(path, "$bitmap@2x.png")))
 
         for (current in searchList) {
-
             var res: Bitmap? = null
 
             try {
                 res = BitmapFactory.decodeFile(current.absolutePath)
             } catch (e: OutOfMemoryError) {
+                e.printStackTrace()
                 System.gc()
                 try {
                     res = BitmapFactory.decodeFile(current.absolutePath)
                 } catch (e: OutOfMemoryError) {
+                    e.printStackTrace()
                 }
             }
 
@@ -331,6 +314,4 @@ object AppleStylePassReader {
         }
         return null
     }
-
-
 }

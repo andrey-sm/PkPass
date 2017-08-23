@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.ui
+package pro.smartum.pkpass.util.helper
 
 import android.app.Activity
 import android.view.View
@@ -8,22 +8,20 @@ import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.barcode.view.*
 import pro.smartum.pkpass.function.getSmallestSide
 import pro.smartum.pkpass.model.pass.BarCode
-import pro.smartum.pkpass.util.PassViewHelper
 
 internal class BarcodeUIController(val rootView: View, private val barCode: BarCode?, activity: Activity, private val passViewHelper: PassViewHelper) {
 
     fun getBarcodeView() = rootView.barcode_img
 
-    private var currentBarcodeWidth: Int = 0
+    private var mCurrentBarcodeWidth: Int = 0
 
     init {
-
         rootView.zoomIn.setOnClickListener {
-            setBarCodeSize(currentBarcodeWidth + passViewHelper.fingerSize)
+            setBarCodeSize(mCurrentBarcodeWidth + passViewHelper.mFingerSize)
         }
 
         rootView.zoomOut.setOnClickListener {
-            setBarCodeSize(currentBarcodeWidth - passViewHelper.fingerSize)
+            setBarCodeSize(mCurrentBarcodeWidth - passViewHelper.mFingerSize)
         }
 
         if (barCode != null) {
@@ -55,19 +53,14 @@ internal class BarcodeUIController(val rootView: View, private val barCode: BarC
 
 
     private fun setBarCodeSize(width: Int) {
+        rootView.zoomOut.visibility = if (width < passViewHelper.mFingerSize * 2) INVISIBLE else VISIBLE
 
-        rootView.zoomOut.visibility = if (width < passViewHelper.fingerSize * 2) INVISIBLE else VISIBLE
-
-        if (width > passViewHelper.windowWidth - passViewHelper.fingerSize * 2) {
+        if (width > passViewHelper.windowWidth - passViewHelper.mFingerSize * 2)
             rootView.zoomIn.visibility = INVISIBLE
-        } else {
-            rootView.zoomIn.visibility = VISIBLE
-        }
+        else rootView.zoomIn.visibility = VISIBLE
 
-        currentBarcodeWidth = width
+        mCurrentBarcodeWidth = width
         val quadratic = barCode!!.format!!.isQuadratic()
         rootView.barcode_img.layoutParams = LinearLayout.LayoutParams(width, if (quadratic) width else ViewGroup.LayoutParams.WRAP_CONTENT)
     }
-
-
 }

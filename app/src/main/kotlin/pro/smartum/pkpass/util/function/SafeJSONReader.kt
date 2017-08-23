@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -73,6 +73,7 @@ fun readJSONSafely(str: String?): JSONObject? {
             return JSONObject(str.replace(key.toRegex(), value))
         } catch (e: JSONException) {
             // expected because of problems in JSON we are trying to fix here
+            e.printStackTrace()
         }
 
     }

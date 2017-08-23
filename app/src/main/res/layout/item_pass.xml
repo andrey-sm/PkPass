@@ -50,7 +50,7 @@
 
             </LinearLayout>
 
-            <pro.smartum.pkpass.views.CategoryIndicatorViewWithIcon
+            <pro.smartum.pkpass.ui.views.CategoryIndicatorViewWithIcon
                 android:id="@+id/categoryView"
                 android:layout_width="48dp"
                 android:layout_height="74dp"
@@ -71,7 +71,7 @@
             android:background="#dfdfdf"
             android:padding="7dp" />
 
-        <pro.smartum.pkpass.views.TimeAndNavBar
+        <pro.smartum.pkpass.ui.views.TimeAndNavBar
             android:id="@+id/timeAndNavBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

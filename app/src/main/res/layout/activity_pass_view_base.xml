@@ -28,7 +28,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <include layout="@layout/pass_list_item" />
+        <include layout="@layout/item_pass" />
 
     </android.support.v4.widget.NestedScrollView>
 

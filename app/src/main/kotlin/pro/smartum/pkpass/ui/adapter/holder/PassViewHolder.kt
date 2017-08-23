@@ -1,11 +1,11 @@
-package pro.smartum.pkpass.ui.pass_view_holder
+package pro.smartum.pkpass.ui.adapter.holder
 
 import android.app.Activity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.View.*
-import kotlinx.android.synthetic.main.pass_list_item.view.*
+import kotlinx.android.synthetic.main.item_pass.view.*
 import kotlinx.android.synthetic.main.time_and_nav.view.*
 import org.threeten.bp.ZonedDateTime
 import pro.smartum.pkpass.R

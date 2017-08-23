@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.util
+package pro.smartum.pkpass.util.helper
 
 import android.app.Activity
 import android.graphics.Bitmap
@@ -10,28 +10,24 @@ import pro.smartum.pkpass.function.getSizeAsPointCompat
 
 class PassViewHelper(private val context: Activity) {
 
-    val fingerSize by lazy { context.resources.getDimensionPixelSize(R.dimen.finger) }
+    val mFingerSize by lazy { context.resources.getDimensionPixelSize(R.dimen.finger) }
 
     fun setBitmapSafe(imageView: ImageView, bitmap: Bitmap?) {
-
-        if (bitmap != null) {
+        if (bitmap == null)
+            imageView.visibility = View.GONE
+        else {
             imageView.setImageBitmap(bitmap)
             imageView.visibility = View.VISIBLE
             imageView.layoutParams = getLayoutParamsSoThatWeHaveMinimumAFingerInHeight(imageView, bitmap)
-        } else {
-            imageView.visibility = View.GONE
         }
     }
 
     fun getLayoutParamsSoThatWeHaveMinimumAFingerInHeight(imageView: ImageView, bitmap: Bitmap)
             = imageView.layoutParams!!.apply {
-        height = if (bitmap.height < fingerSize) {
-            fingerSize
-        } else {
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        }
+        height = if (bitmap.height < mFingerSize)
+            mFingerSize
+        else LinearLayout.LayoutParams.WRAP_CONTENT
     }
 
     val windowWidth by lazy { context.windowManager.getSizeAsPointCompat().x }
-
 }

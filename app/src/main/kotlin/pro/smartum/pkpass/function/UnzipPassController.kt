@@ -6,13 +6,14 @@ import android.graphics.BitmapFactory
 import android.graphics.pdf.PdfRenderer
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import net.lingala.zip4j.core.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import okio.Okio
 import org.json.JSONObject
 import pro.smartum.pkpass.model.InputStreamWithSource
 import pro.smartum.pkpass.storage.PassStore
+import pro.smartum.pkpass.util.Logger
+import pro.smartum.pkpass.util.function.readJSONSafely
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -35,10 +36,8 @@ object UnzipPassController {
             tempFile.delete()
         } catch (e: Exception) {
             e.printStackTrace()
-            //App.tracker.trackException("problem processing InputStream", e, false)
             spec.failCallback?.fail("problem with temp file" + e)
         }
-
     }
 
     private fun processFile(spec: FileUnzipControllerSpec) {
@@ -145,15 +144,12 @@ object UnzipPassController {
         spec.targetPath.mkdirs()
         val rename_file = File(spec.targetPath, uuid)
 
-        if (spec.overwrite && rename_file.exists()) {
+        if (spec.overwrite && rename_file.exists())
             rename_file.deleteRecursively()
-        }
 
-        if (!rename_file.exists()) {
+        if (!rename_file.exists())
             path.renameTo(rename_file)
-        } else {
-            Log.i("aLog", "Pass with same ID exists")
-        }
+        else Logger.e(javaClass, "Pass with same ID exists")
 
         spec.onSuccessCallback?.call(uuid)
     }

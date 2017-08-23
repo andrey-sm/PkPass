@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -17,10 +17,8 @@ fun generateBitmapDrawable(resources: Resources, data: String, type: PassBarCode
 }
 
 fun generateBarCodeBitmap(data: String, type: PassBarCodeFormat): Bitmap? {
-
-    if (data.isEmpty()) {
+    if (data.isEmpty())
         return null
-    }
 
     try {
         val matrix = getBitMatrix(data, type)
@@ -32,29 +30,19 @@ fun generateBarCodeBitmap(data: String, type: PassBarCodeFormat): Bitmap? {
 
         // create buffered image to draw to
         // NTFS Bitmap.Config.ALPHA_8 sounds like an awesome idea - been there - done that ..
-        val barcode_image = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val barcodeImage = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
 
         // iterate through the matrix and draw the pixels to the image
         for (y in 0..height - 1) {
-            for (x in 0..width - 1) {
-                barcode_image.setPixel(x, y, if (matrix.get(x, if (is1D) 0 else y)) 0 else 0xFFFFFF)
-            }
+            for (x in 0..width - 1)
+                barcodeImage.setPixel(x, y, if (matrix.get(x, if (is1D) 0 else y)) 0 else 0xFFFFFF)
         }
 
-        return barcode_image
-    } catch (e: com.google.zxing.WriterException) {
-        e.printStackTrace()
-        // TODO check if we should better return some rescue Image here
-        return null
-    } catch (e: IllegalArgumentException) {
-        e.printStackTrace()
-        return null
-    } catch (e: ArrayIndexOutOfBoundsException) {
-        // happens for ITF barcode on certain inputs
+        return barcodeImage
+    } catch (e: Exception) {
         e.printStackTrace()
         return null
     }
-
 }
 
 fun getBitMatrix(data: String, type: PassBarCodeFormat)

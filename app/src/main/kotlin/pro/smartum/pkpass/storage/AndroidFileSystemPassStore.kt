@@ -11,7 +11,7 @@ import pro.smartum.pkpass.model.pass.Pass
 import pro.smartum.pkpass.model.pass.PassImpl
 import pro.smartum.pkpass.reader.AppleStylePassReader
 import pro.smartum.pkpass.reader.PassReader
-import pro.smartum.pkpass.storage.PassStore
+import pro.smartum.pkpass.util.Logger
 import java.io.File
 import java.util.*
 
@@ -70,7 +70,7 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
                 result = jsonAdapter.fromJson(Okio.buffer(Okio.source(file)))
             } catch (ignored: JsonDataException) {
                 ignored.printStackTrace()
-                /////////////////App.tracker.trackException("invalid main.json", false)
+                Logger.d(javaClass, "invalid main.json")
             }
         }
 
@@ -112,9 +112,7 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
         return File(path, id)
     }
 
-    override fun notifyChange() {
-       //////////////// bus.post(PassStoreChangeEvent)
-    }
+    override fun notifyChange() {}
 
     override fun syncPassStoreWithClassifier(defaultTopic: String) {
         val keysToRemove = classifier.topicByIdMap.keys.filter { getPassbookForId(it) == null }

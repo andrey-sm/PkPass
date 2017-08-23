@@ -6,7 +6,6 @@ import android.support.v4.app.NavUtils
 import android.support.v4.app.TaskStackBuilder
 import android.support.v4.text.util.LinkifyCompat
 import android.text.util.Linkify
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -14,22 +13,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_pass_view.*
 import kotlinx.android.synthetic.main.activity_pass_view_base.*
-import kotlinx.android.synthetic.main.pass_list_item.*
+import kotlinx.android.synthetic.main.item_pass.*
 import kotlinx.android.synthetic.main.pass_view_extra_data.*
 import pro.smartum.pkpass.R
-import pro.smartum.pkpass.function.HtmlCompat
+import pro.smartum.pkpass.app.App.Companion.passStore
 import pro.smartum.pkpass.model.PassBitmapDefinitions
 import pro.smartum.pkpass.model.pass.Pass
-import pro.smartum.pkpass.ui.BarcodeUIController
-import pro.smartum.pkpass.ui.pass_view_holder.VerbosePassViewHolder
-import pro.smartum.pkpass.util.PassViewHelper
+import pro.smartum.pkpass.ui.adapter.holder.VerbosePassViewHolder
+import pro.smartum.pkpass.util.HtmlCompat
+import pro.smartum.pkpass.util.helper.BarcodeUIController
+import pro.smartum.pkpass.util.helper.PassViewHelper
 
 class PassViewActivity : PassViewActivityBase() {
 
     val passViewHelper by lazy { PassViewHelper(this) }
 
     internal fun processImage(view: ImageView, name: String, pass: Pass) {
-        val bitmap = pass.getBitmap(passStore, name)
+        val bitmap = pass.getBitmap(mPassStore, name)
         if (bitmap != null && bitmap.width > 300) {
             view.setOnClickListener {
                 val intent = Intent(view.context, TouchImageActivity::class.java)
@@ -50,19 +50,16 @@ class PassViewActivity : PassViewActivityBase() {
         processImage(thumbnail_img_view, PassBitmapDefinitions.BITMAP_THUMBNAIL, currentPass)
         processImage(strip_img_view, PassBitmapDefinitions.BITMAP_STRIP, currentPass)
 
-        if (map_container != null) {
-            if (!(currentPass.locations.isNotEmpty() /*&& PassbookMapsFacade.init(this)*/)) {
-                map_container.visibility = View.GONE
-            }
-        }
+        if (map_container != null && !(currentPass.locations.isNotEmpty()))
+            map_container.visibility = View.GONE
 
-        val back_str = StringBuilder()
+        val backStr = StringBuilder()
 
         front_field_container.removeAllViews()
 
         for (field in currentPass.fields) {
             if (field.hide) {
-                back_str.append(field.toHtmlSnippet())
+                backStr.append(field.toHtmlSnippet())
             } else {
                 val v = layoutInflater.inflate(R.layout.main_field_item, front_field_container, false)
                 val key = v.findViewById(R.id.key) as TextView
@@ -77,13 +74,10 @@ class PassViewActivity : PassViewActivityBase() {
         }
 
 
-        if (back_str.isNotEmpty()) {
-            back_fields.text = HtmlCompat.fromHtml(back_str.toString())
+        if (backStr.isNotEmpty()) {
+            back_fields.text = HtmlCompat.fromHtml(backStr.toString())
             moreTextView.visibility = View.VISIBLE
-        } else {
-            moreTextView.visibility = View.GONE
-        }
-
+        } else moreTextView.visibility = View.GONE
 
         LinkifyCompat.addLinks(back_fields, Linkify.ALL)
 
@@ -127,21 +121,6 @@ class PassViewActivity : PassViewActivityBase() {
         refresh()
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-//        menu.findItem(R.id.menu_map).isVisible = !currentPass.locations.isEmpty()
-//        menu.findItem(R.id.menu_update).isVisible = PassViewActivityBase.mightPassBeAbleToUpdate(currentPass)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.map_item, menu)
-//        menuInflater.inflate(R.menu.update, menu)
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            menuInflater.inflate(R.menu.shortcut, menu)
-//        }
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
             val upIntent = NavUtils.getParentActivityIntent(this)
@@ -158,5 +137,4 @@ class PassViewActivity : PassViewActivityBase() {
     }
 
     override fun onAttachedToWindow() = window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
-
 }

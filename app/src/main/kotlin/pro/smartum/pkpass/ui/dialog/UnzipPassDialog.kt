@@ -20,14 +20,12 @@ object UnzipPassDialog {
                 .show()
     }
 
-
     fun show(ins: InputStreamWithSource,
              activity: Activity,
              passStore: PassStore,
              callAfterFinishOnUIThread: (path: String) -> Unit) {
-        if (activity.isFinishing) {
+        if (activity.isFinishing)
             return  // no need to act any more ..
-        }
 
         val dialog = ProgressDialog.show(activity,
                 activity.getString(R.string.unzip_pass_dialog_title),
@@ -66,7 +64,6 @@ object UnzipPassDialog {
 
         val alertDialogUpdater = AlertDialogUpdater(callAfterFinishOnUIThread)
         Thread(alertDialogUpdater).start()
-
     }
 
     private fun prepareResult(activity: Activity, dialog: ProgressDialog): Boolean {
@@ -79,9 +76,8 @@ object UnzipPassDialog {
                 dialog.dismiss()
                 return true
             } catch (ignored: IllegalArgumentException) {
-                // Would love a better option - searched a long time - found nothing - and this is better than a crash
+                ignored.printStackTrace()
             }
-
         }
         return false
     }

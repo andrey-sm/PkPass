@@ -3,8 +3,8 @@ package pro.smartum.pkpass.app
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.squareup.moshi.Moshi
-import pro.smartum.pkpass.ColorAdapter
-import pro.smartum.pkpass.ZonedTimeAdapter
+import pro.smartum.pkpass.model.adapter.ColorAdapter
+import pro.smartum.pkpass.model.adapter.ZonedTimeAdapter
 import pro.smartum.pkpass.storage.AndroidFileSystemPassStore
 import pro.smartum.pkpass.storage.PassStore
 

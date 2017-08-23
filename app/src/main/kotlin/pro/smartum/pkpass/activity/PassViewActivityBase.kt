@@ -1,23 +1,13 @@
 package pro.smartum.pkpass.activity
 
-import android.content.ComponentName
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewConfiguration
 import android.view.WindowManager
-import android.widget.Toast
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.RuntimePermissions
-import pro.smartum.pkpass.BuildConfig
-import pro.smartum.pkpass.R
-import pro.smartum.pkpass.model.PassBitmapDefinitions.BITMAP_ICON
 import pro.smartum.pkpass.model.pass.Pass
 
 
-@RuntimePermissions
-open class PassViewActivityBase : PassAndroidActivity() {
+open class PassViewActivityBase : BaseActivity() {
 
     lateinit var currentPass: Pass
     private var fullBrightnessSet = false
@@ -39,44 +29,24 @@ open class PassViewActivityBase : PassAndroidActivity() {
             }
         } catch (ex: Exception) {
             // Ignore - but at least we tried ;-)
+            ex.printStackTrace()
         }
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        ///////////////////////////////////////State.lastSelectedPassUUID = currentPass.id
     }
 
     override fun onResume() {
         super.onResume()
 
-        val uuid = intent.getStringExtra(EXTRA_KEY_UUID)
-
-        if (uuid != null) {
-            val passbookForId = passStore.getPassbookForId(uuid)
-            passStore.currentPass = passbookForId
-        }
-
-        if (passStore.currentPass == null) {
-            Toast.makeText(baseContext, "IN passStore.currentPass == null", Toast.LENGTH_SHORT).show()
-//            val passbookForId = passStore.getPassbookForId(State.lastSelectedPassUUID)
-//            passStore.currentPass = passbookForId
-        }
-
-        if (passStore.currentPass == null) {
-            //////////////tracker.trackException("pass not present in " + this, false)
+        if (mPassStore.currentPass == null) {
             finish()
             return
         }
 
-        currentPass = passStore.currentPass!!
+        currentPass = mPassStore.currentPass!!
 
         configureActionBar()
 
-        if (settings.isAutomaticLightEnabled()) {
+        if (settings.isAutomaticLightEnabled())
             setToFullBrightness()
-        }
     }
 
     protected fun configureActionBar() {
@@ -84,147 +54,18 @@ open class PassViewActivityBase : PassAndroidActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    protected open fun refresh() {
-    }
+    protected open fun refresh() {}
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_pass_view, menu)
-        return true
-    }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val res = super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.menu_light).isVisible = !fullBrightnessSet
-        menu.findItem(R.id.menu_print).isVisible = Build.VERSION.SDK_INT >= 19
-        return res
-    }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-////        if (PassMenuOptions(this, currentPass).process(item)) {
-////            return true
-////        }
-////
-////        return when (item.itemId) {
-////            android.R.id.home -> {
-////                finish()
-////                true
-////            }
-////
-////            R.id.menu_light -> {
-////                setToFullBrightness()
-////                true
-////            }
-////
-////            R.id.install_shortcut -> {
-////                PassViewActivityBasePermissionsDispatcher.createShortcutWithCheck(this)
-////                true
-////            }
-////
-////            R.id.menu_update -> {
-////                Thread(UpdateAsync()).start()
-////                true
-////            }
-////
-////            else -> super.onOptionsItemSelected(item)
-////        }
-//
-//    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //PassViewActivityBasePermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
-    }
-
-    @NeedsPermission("com.android.launcher.permission.INSTALL_SHORTCUT")
-    fun createShortcut() {
-        val intent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
-        val shortcutIntent = Intent()
-        shortcutIntent.putExtra(EXTRA_KEY_UUID, currentPass.id)
-        val component = ComponentName(BuildConfig.APPLICATION_ID, BuildConfig.APPLICATION_ID + ".ui.PassViewActivity")
-        shortcutIntent.component = component
-        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, currentPass.description)
-
-        currentPass.getBitmap(passStore, BITMAP_ICON).let {
-            //   intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, Bitmap.createScaledBitmap(it, 128, 128, true))
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-
-        sendBroadcast(intent)
     }
-
-//    inner class UpdateAsync : Runnable {
-//
-//        private lateinit var dlg: ProgressDialog
-//
-//        override fun run() {
-//            val pass = currentPass
-//            runOnUiThread {
-//                dlg = ProgressDialog(this@PassViewActivityBase)
-//                dlg.setMessage(getString(R.string.downloading_new_pass_version))
-//                dlg.show()
-//            }
-//
-//            val client = OkHttpClient()
-//
-//            val url = pass.webServiceURL + "/v1/passes/" + pass.passIdent + "/" + pass.serial
-//            val requestBuilder = Request.Builder().url(url)
-//            requestBuilder.addHeader("Authorization", "ApplePass " + pass.authToken!!)
-//
-//            val request = requestBuilder.build()
-//
-//            val response: Response
-//            try {
-//                response = client.newCall(request).execute()
-//                val inputStreamWithSource = InputStreamWithSource(url, response.body().byteStream())
-//                val spec = InputStreamUnzipControllerSpec(inputStreamWithSource, this@PassViewActivityBase, passStore,
-//                        MyUnzipSuccessCallback(dlg),
-//                        MyUnzipFailCallback(dlg))
-//                spec.overwrite = true
-//                UnzipPassController.processInputStream(spec)
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//
-//        }
-//    }
-//
-//    inner class MyUnzipFailCallback constructor(private val dlg: Dialog) : UnzipPassController.FailCallback {
-//
-//        override fun fail(reason: String) {
-//            runOnUiThread {
-//                if (!isFinishing) {
-//                    dlg.dismiss()
-//                    AlertDialog.Builder(this@PassViewActivityBase).setMessage("Could not update pass :( $reason)")
-//                            .setPositiveButton(android.R.string.ok, null)
-//                            .show()
-//                }
-//            }
-//
-//        }
-//    }
-//
-//    inner class MyUnzipSuccessCallback constructor(private val dlg: Dialog) : UnzipPassController.SuccessCallback {
-//
-//        override fun call(uuid: String) {
-//            runOnUiThread(Runnable {
-//                if (isFinishing) {
-//                    return@Runnable
-//                }
-//                dlg.dismiss()
-//                if (currentPass.id != uuid) {
-//                    passStore.deletePassWithId(currentPass.id)
-//                }
-//                val newPass = passStore.getPassbookForId(uuid)
-//                passStore.currentPass = newPass
-//                currentPass = passStore.currentPass!!
-//                refresh()
-//
-//                Snackbar.make(window.decorView, R.string.pass_updated, Snackbar.LENGTH_LONG).show()
-//            })
-//
-//        }
-//
-//    }
 
     private fun setToFullBrightness() {
         val win = window
@@ -233,14 +74,5 @@ open class PassViewActivityBase : PassAndroidActivity() {
         win.attributes = params
         fullBrightnessSet = true
         supportInvalidateOptionsMenu()
-    }
-
-    companion object {
-
-        val EXTRA_KEY_UUID = "uuid"
-
-        fun mightPassBeAbleToUpdate(pass: Pass?): Boolean {
-            return pass != null && pass.webServiceURL != null && pass.passIdent != null && pass.serial != null
-        }
     }
 }

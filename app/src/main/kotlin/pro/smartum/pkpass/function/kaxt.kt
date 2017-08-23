@@ -21,6 +21,7 @@ fun String?.parseColor(defaultValue: Int) : Int = when {
         try {
             Color.parseColor(this)
         } catch (ignored: Exception) {
+            ignored.printStackTrace()
             // fall through to default color
             defaultValue
         }

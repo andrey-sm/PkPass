@@ -11,10 +11,8 @@ class PassByTypeFirstAndTimeSecondComparator : Comparator<Pass> {
     override fun compare(lhs: Pass, rhs: Pass): Int {
         val compareResult = lhs.type.compareTo(rhs.type)
 
-        if (compareResult != 0) {
+        if (compareResult != 0)
             return compareResult
-        } else {
-            return passByTimeComparator.compare(lhs, rhs)
-        }
+        return passByTimeComparator.compare(lhs, rhs)
     }
 }

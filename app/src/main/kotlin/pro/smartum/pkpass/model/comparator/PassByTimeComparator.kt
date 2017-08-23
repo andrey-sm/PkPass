@@ -30,13 +30,11 @@ open class PassByTimeComparator : Comparator<Pass> {
     }
 
     private fun extractPassDate(pass: Pass): ZonedDateTime? {
-        if (pass.calendarTimespan != null && pass.calendarTimespan!!.from != null) {
+        if (pass.calendarTimespan != null && pass.calendarTimespan!!.from != null)
             return pass.calendarTimespan!!.from
-        }
 
-        if (pass.validTimespans != null && !pass.validTimespans!!.isEmpty()) {
+        if (pass.validTimespans != null && !pass.validTimespans!!.isEmpty())
             return pass.validTimespans!![0].from
-        }
 
         return null
     }

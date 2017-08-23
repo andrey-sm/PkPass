@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import android.graphics.Color
 import android.support.annotation.ColorInt
@@ -19,7 +19,6 @@ fun getHumanCategoryString(fromPass: PassType) = when (fromPass) {
     else -> R.string.category_none
 }
 
-
 @ColorInt
 fun getCategoryDefaultBG(category: PassType) = when (category) {
     PassType.BOARDING -> 0xFF3d73e9
@@ -31,7 +30,6 @@ fun getCategoryDefaultBG(category: PassType) = when (category) {
 
     else -> Color.WHITE.toLong()
 }.toInt()
-
 
 @DrawableRes
 fun getCategoryTopImageRes(type: PassType) = when (type) {

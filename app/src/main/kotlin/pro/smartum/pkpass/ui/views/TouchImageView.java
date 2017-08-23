@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.ui;
+package pro.smartum.pkpass.ui.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;

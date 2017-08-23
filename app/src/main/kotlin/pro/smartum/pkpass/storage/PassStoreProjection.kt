@@ -7,7 +7,7 @@ import java.util.*
 
 class PassStoreProjection(private val passStore: PassStore, val topic: String, private val passSortOrder: PassSortOrder? = null) {
 
-    var passList: List<Pass> = ArrayList()
+    var passList: List<Pass> = ArrayList<Pass>()
         private set
 
     init {

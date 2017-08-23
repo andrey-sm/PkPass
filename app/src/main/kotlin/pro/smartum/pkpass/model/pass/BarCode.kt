@@ -3,7 +3,7 @@ package pro.smartum.pkpass.model.pass
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
-import pro.smartum.pkpass.function.generateBitmapDrawable
+import pro.smartum.pkpass.util.function.generateBitmapDrawable
 import java.util.*
 
 class BarCode(val format: PassBarCodeFormat?, val message: String? = UUID.randomUUID().toString().toUpperCase()) {

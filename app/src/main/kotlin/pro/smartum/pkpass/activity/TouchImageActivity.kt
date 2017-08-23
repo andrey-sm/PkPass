@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import pro.smartum.pkpass.app.App
 import pro.smartum.pkpass.storage.PassStore
-import pro.smartum.pkpass.ui.TouchImageView
+import pro.smartum.pkpass.ui.views.TouchImageView
 
 class TouchImageActivity : AppCompatActivity() {
 

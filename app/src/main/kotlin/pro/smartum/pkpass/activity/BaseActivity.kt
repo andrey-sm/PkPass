@@ -5,10 +5,8 @@ import pro.smartum.pkpass.app.App
 import pro.smartum.pkpass.app.Settings
 import pro.smartum.pkpass.storage.PassStore
 
-open class PassAndroidActivity : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
 
-    val passStore: PassStore = App.passStore
+    val mPassStore: PassStore = App.passStore
     val settings: Settings = App.settings
-
-
 }

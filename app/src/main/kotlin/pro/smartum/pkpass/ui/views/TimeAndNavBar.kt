@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.views
+package pro.smartum.pkpass.ui.views
 
 import android.content.Context
 import android.support.v7.widget.AppCompatDrawableManager
@@ -21,5 +21,4 @@ class TimeAndNavBar constructor(context: Context, attrs: AttributeSet) : FrameLa
             locationButton.setCompoundDrawablesWithIntrinsicBounds(navDrawable, null, null, null)
         }
     }
-
 }

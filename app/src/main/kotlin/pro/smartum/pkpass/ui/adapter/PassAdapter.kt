@@ -12,25 +12,23 @@ import pro.smartum.pkpass.app.Settings
 import pro.smartum.pkpass.function.startActivityFromClass
 import pro.smartum.pkpass.storage.PassStore
 import pro.smartum.pkpass.storage.PassStoreProjection
-import pro.smartum.pkpass.ui.pass_view_holder.CondensedPassViewHolder
-import pro.smartum.pkpass.ui.pass_view_holder.PassViewHolder
-import pro.smartum.pkpass.ui.pass_view_holder.VerbosePassViewHolder
+import pro.smartum.pkpass.ui.adapter.holder.CondensedPassViewHolder
+import pro.smartum.pkpass.ui.adapter.holder.PassViewHolder
+import pro.smartum.pkpass.ui.adapter.holder.VerbosePassViewHolder
 
 class PassAdapter(private val passListActivity: AppCompatActivity, private val passStoreProjection: PassStoreProjection) : RecyclerView.Adapter<PassViewHolder>() {
 
     val passStore: PassStore = App.passStore
     val settings: Settings = App.settings
+    private val list = passStoreProjection.passList
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): PassViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
 
-        val res = inflater.inflate(R.layout.pass_list_item, viewGroup, false) as CardView
-        if (settings.isCondensedModeEnabled()) {
+        val res = inflater.inflate(R.layout.item_pass, viewGroup, false) as CardView
+        if (settings.isCondensedModeEnabled())
             return CondensedPassViewHolder(res)
-        } else {
-            return VerbosePassViewHolder(res)
-        }
-
+        return VerbosePassViewHolder(res)
     }
 
     override fun onBindViewHolder(viewHolder: PassViewHolder, position: Int) {
@@ -44,15 +42,9 @@ class PassAdapter(private val passListActivity: AppCompatActivity, private val p
             passStore.currentPass = pass
             passListActivity.startActivityFromClass(PassViewActivity::class.java)
         }
-
-        root.setOnLongClickListener {
-            ////////////Snackbar.make(root, R.string.please_use_the_swipe_feature, Snackbar.LENGTH_LONG).show()
-            true
-        }
     }
 
     override fun getItemId(position: Int) = position.toLong()
-    private val list = passStoreProjection.passList
-    override fun getItemCount() = list.size
 
+    override fun getItemCount() = list.size
 }

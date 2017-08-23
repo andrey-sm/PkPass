@@ -1,9 +1,9 @@
-package pro.smartum.pkpass.ui.pass_view_holder
+package pro.smartum.pkpass.ui.adapter.holder
 
 import android.app.Activity
 import android.support.v7.widget.CardView
 import android.view.View
-import kotlinx.android.synthetic.main.pass_list_item.view.*
+import kotlinx.android.synthetic.main.item_pass.view.*
 import pro.smartum.pkpass.model.pass.Pass
 import pro.smartum.pkpass.storage.PassStore
 

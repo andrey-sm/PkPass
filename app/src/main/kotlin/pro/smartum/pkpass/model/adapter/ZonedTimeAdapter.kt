@@ -1,4 +1,4 @@
-package pro.smartum.pkpass
+package pro.smartum.pkpass.model.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -12,5 +12,4 @@ class ZonedTimeAdapter {
 
     @FromJson
     internal fun fromJson(zonedDateTime: String) = ZonedDateTime.parse(zonedDateTime)
-
 }
