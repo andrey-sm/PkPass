@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import android.app.Activity
 import android.content.Context

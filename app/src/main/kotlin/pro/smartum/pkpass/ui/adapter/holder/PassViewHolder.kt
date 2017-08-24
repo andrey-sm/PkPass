@@ -23,8 +23,8 @@ abstract class PassViewHolder(val view: CardView) : RecyclerView.ViewHolder(view
     }
 
     open fun setupButtons(activity: Activity, pass: Pass) {
-        view.timeAndNavBar.timeButton.text = view.context.getString(R.string.pass_to_calendar)
-        view.timeAndNavBar.locationButton.text = view.context.getString(R.string.pass_directions)
+        view.vTimeAndNavBar.vTimeButton.text = view.context.getString(R.string.pass_to_calendar)
+        view.vTimeAndNavBar.vLocationButton.text = view.context.getString(R.string.pass_directions)
 
 //        view.timeAndNavBar.timeButton.setOnClickListener {
 //            getDateOrExtraText(pass)?.let { tryAddDateToCalendar(pass, view, it) }
@@ -40,20 +40,20 @@ abstract class PassViewHolder(val view: CardView) : RecyclerView.ViewHolder(view
 
         val noButtons = dateOrExtraText == null && pass.locations.isEmpty()
 
-        view.actionsSeparator.visibility = getVisibilityForGlobalAndLocal(noButtons, true)
-        view.timeAndNavBar.locationButton.visibility = getVisibilityForGlobalAndLocal(noButtons, pass.locations.isNotEmpty())
+        view.vActionsSeparator.visibility = getVisibilityForGlobalAndLocal(noButtons, true)
+        view.vTimeAndNavBar.vLocationButton.visibility = getVisibilityForGlobalAndLocal(noButtons, pass.locations.isNotEmpty())
 
-        view.timeAndNavBar.timeButton.visibility = getVisibilityForGlobalAndLocal(noButtons, dateOrExtraText != null)
+        view.vTimeAndNavBar.vTimeButton.visibility = getVisibilityForGlobalAndLocal(noButtons, dateOrExtraText != null)
 
         val iconBitmap = pass.getBitmap(passStore, PassBitmapDefinitions.BITMAP_ICON)
 
-        iconBitmap?.let { view.categoryView.setIcon(it) }
+        iconBitmap?.let { view.vCategoryView.setIcon(it) }
 
-        view.categoryView.setImageByCategory(pass.type)
+        view.vCategoryView.setImageByCategory(pass.type)
 
-        view.categoryView.setAccentColor(pass.accentColor)
+        view.vCategoryView.setAccentColor(pass.accentColor)
 
-        view.passTitle.text = pass.description
+        view.vPassTitle.text = pass.description
     }
 
     fun getExtraString(pass: Pass) = pass.fields.firstOrNull()?.let { getExtraStringForField(it) }

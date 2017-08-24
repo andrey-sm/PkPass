@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import pro.smartum.pkpass.app.App
+import pro.smartum.pkpass.app.KEY_IMAGE
 import pro.smartum.pkpass.storage.PassStore
 import pro.smartum.pkpass.ui.views.TouchImageView
 
@@ -18,7 +19,7 @@ class TouchImageActivity : AppCompatActivity() {
 
         setContentView(webView)
 
-        webView.setImageBitmap(passStore.currentPass!!.getBitmap(passStore, intent.getStringExtra("IMAGE")))
+        webView.setImageBitmap(passStore.currentPass!!.getBitmap(passStore, intent.getStringExtra(KEY_IMAGE)))
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

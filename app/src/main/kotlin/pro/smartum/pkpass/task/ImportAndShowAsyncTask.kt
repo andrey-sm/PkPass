@@ -6,10 +6,10 @@ import android.os.AsyncTask
 import pro.smartum.pkpass.R
 import pro.smartum.pkpass.activity.PassImportActivity
 import pro.smartum.pkpass.activity.PassViewActivity
-import pro.smartum.pkpass.function.UnzipPassController
-import pro.smartum.pkpass.function.UnzipPassController.InputStreamUnzipControllerSpec
-import pro.smartum.pkpass.function.fromURI
-import pro.smartum.pkpass.function.startActivityFromClass
+import pro.smartum.pkpass.util.UnzipPassController
+import pro.smartum.pkpass.util.UnzipPassController.InputStreamUnzipControllerSpec
+import pro.smartum.pkpass.util.function.fromURI
+import pro.smartum.pkpass.util.function.startActivityFromClass
 import pro.smartum.pkpass.model.InputStreamWithSource
 import pro.smartum.pkpass.ui.dialog.UnzipPassDialog
 

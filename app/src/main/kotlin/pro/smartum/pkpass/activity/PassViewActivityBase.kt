@@ -10,7 +10,7 @@ import pro.smartum.pkpass.model.pass.Pass
 open class PassViewActivityBase : BaseActivity() {
 
     lateinit var currentPass: Pass
-    private var fullBrightnessSet = false
+    private var mFullBrightnessSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,7 @@ open class PassViewActivityBase : BaseActivity() {
         val params = win.attributes
         params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_FULL
         win.attributes = params
-        fullBrightnessSet = true
+        mFullBrightnessSet = true
         supportInvalidateOptionsMenu()
     }
 }

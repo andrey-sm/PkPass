@@ -6,21 +6,21 @@ import android.view.View.*
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.barcode.view.*
-import pro.smartum.pkpass.function.getSmallestSide
+import pro.smartum.pkpass.util.function.getSmallestSide
 import pro.smartum.pkpass.model.pass.BarCode
 
 internal class BarcodeUIController(val rootView: View, private val barCode: BarCode?, activity: Activity, private val passViewHelper: PassViewHelper) {
 
-    fun getBarcodeView() = rootView.barcode_img
+    fun getBarcodeView() = rootView.vBarcodeImg
 
     private var mCurrentBarcodeWidth: Int = 0
 
     init {
-        rootView.zoomIn.setOnClickListener {
+        rootView.vZoomIn.setOnClickListener {
             setBarCodeSize(mCurrentBarcodeWidth + passViewHelper.mFingerSize)
         }
 
-        rootView.zoomOut.setOnClickListener {
+        rootView.vZoomOut.setOnClickListener {
             setBarCodeSize(mCurrentBarcodeWidth - passViewHelper.mFingerSize)
         }
 
@@ -30,37 +30,37 @@ internal class BarcodeUIController(val rootView: View, private val barCode: BarC
             val bitmapDrawable = barCode.getBitmap(activity.resources)
 
             if (bitmapDrawable != null) {
-                rootView.barcode_img.setImageDrawable(bitmapDrawable)
-                rootView.barcode_img.visibility = VISIBLE
+                rootView.vBarcodeImg.setImageDrawable(bitmapDrawable)
+                rootView.vBarcodeImg.visibility = VISIBLE
             } else {
-                rootView.barcode_img.visibility = GONE
+                rootView.vBarcodeImg.visibility = GONE
             }
 
             if (barCode.alternativeText != null) {
-                rootView.barcode_alt_text.text = barCode.alternativeText
-                rootView.barcode_alt_text.visibility = VISIBLE
+                rootView.vBarcodeAltText.text = barCode.alternativeText
+                rootView.vBarcodeAltText.visibility = VISIBLE
             } else {
-                rootView.barcode_alt_text.visibility = GONE
+                rootView.vBarcodeAltText.visibility = GONE
             }
 
             setBarCodeSize(smallestSide / 2)
         } else {
-            passViewHelper.setBitmapSafe(rootView.barcode_img, null)
-            rootView.zoomIn.visibility = GONE
-            rootView.zoomOut.visibility = GONE
+            passViewHelper.setBitmapSafe(rootView.vBarcodeImg, null)
+            rootView.vZoomIn.visibility = GONE
+            rootView.vZoomOut.visibility = GONE
         }
     }
 
 
     private fun setBarCodeSize(width: Int) {
-        rootView.zoomOut.visibility = if (width < passViewHelper.mFingerSize * 2) INVISIBLE else VISIBLE
+        rootView.vZoomOut.visibility = if (width < passViewHelper.mFingerSize * 2) INVISIBLE else VISIBLE
 
         if (width > passViewHelper.windowWidth - passViewHelper.mFingerSize * 2)
-            rootView.zoomIn.visibility = INVISIBLE
-        else rootView.zoomIn.visibility = VISIBLE
+            rootView.vZoomIn.visibility = INVISIBLE
+        else rootView.vZoomIn.visibility = VISIBLE
 
         mCurrentBarcodeWidth = width
         val quadratic = barCode!!.format!!.isQuadratic()
-        rootView.barcode_img.layoutParams = LinearLayout.LayoutParams(width, if (quadratic) width else ViewGroup.LayoutParams.WRAP_CONTENT)
+        rootView.vBarcodeImg.layoutParams = LinearLayout.LayoutParams(width, if (quadratic) width else ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import android.content.res.Resources
 import pro.smartum.pkpass.R
@@ -9,25 +9,6 @@ import pro.smartum.pkpass.reader.PassType
 import java.util.*
 
 val APP = "passandroid"
-
-//fun createAndAddEmptyPass(passStore: PassStore, resources: Resources): Pass {
-//    val pass = createBasePass()
-//
-//    pass.description = "custom Pass"
-//
-//    passStore.currentPass = pass
-//    passStore.save(pass)
-//
-//    val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-//
-//    try {
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 90, FileOutputStream(File(passStore.getPathForID(pass.id), PassBitmapDefinitions.BITMAP_ICON + ".png")))
-//    } catch (ignored: FileNotFoundException) {
-//        ignored.printStackTrace()
-//    }
-//
-//    return pass
-//}
 
 fun createPassForImageImport(resources: Resources): Pass {
     return createBasePass().apply {

@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,7 +12,8 @@ import okio.Okio
 import org.json.JSONObject
 import pro.smartum.pkpass.model.InputStreamWithSource
 import pro.smartum.pkpass.storage.PassStore
-import pro.smartum.pkpass.util.Logger
+import pro.smartum.pkpass.util.function.createPassForImageImport
+import pro.smartum.pkpass.util.function.createPassForPDFImport
 import pro.smartum.pkpass.util.function.readJSONSafely
 import java.io.File
 import java.io.FileOutputStream
@@ -62,15 +63,15 @@ object UnzipPassController {
         }
 
 
-        val manifest_json: JSONObject
+        val manifestJson: JSONObject
         val manifestFile = File(path, "manifest.json")
         val espassFile = File(path, "main.json")
 
         if (manifestFile.exists()) {
             try {
                 val readToString = manifestFile.bufferedReader().readText()
-                manifest_json = readJSONSafely(readToString)!!
-                uuid = manifest_json.getString("pass.json")
+                manifestJson = readJSONSafely(readToString)!!
+                uuid = manifestJson.getString("pass.json")
             } catch (e: Exception) {
                 spec.failCallback?.fail("Problem with manifest.json: " + e)
                 return
@@ -79,8 +80,8 @@ object UnzipPassController {
         } else if (espassFile.exists()) {
             try {
                 val readToString = espassFile.bufferedReader().readText()
-                manifest_json = readJSONSafely(readToString)!!
-                uuid = manifest_json.getString("id")
+                manifestJson = readJSONSafely(readToString)!!
+                uuid = manifestJson.getString("id")
             } catch (e: Exception) {
                 spec.failCallback?.fail("Problem with manifest.json: " + e)
                 return
@@ -137,13 +138,13 @@ object UnzipPassController {
         }
 
         spec.targetPath.mkdirs()
-        val rename_file = File(spec.targetPath, uuid)
+        val renameFile = File(spec.targetPath, uuid)
 
-        if (spec.overwrite && rename_file.exists())
-            rename_file.deleteRecursively()
+        if (spec.overwrite && renameFile.exists())
+            renameFile.deleteRecursively()
 
-        if (!rename_file.exists())
-            path.renameTo(rename_file)
+        if (!renameFile.exists())
+            path.renameTo(renameFile)
         else Logger.e(javaClass, "Pass with same ID exists")
 
         spec.onSuccessCallback?.call(uuid)

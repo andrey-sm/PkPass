@@ -8,14 +8,14 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.threeten.bp.ZonedDateTime
 import pro.smartum.pkpass.R
-import pro.smartum.pkpass.util.function.getHumanCategoryString
-import pro.smartum.pkpass.function.parseColor
-import pro.smartum.pkpass.util.function.readJSONSafely
 import pro.smartum.pkpass.model.AppleStylePassTranslation
 import pro.smartum.pkpass.model.PassBitmapDefinitions
 import pro.smartum.pkpass.model.PassDefinitions
 import pro.smartum.pkpass.model.pass.*
 import pro.smartum.pkpass.util.Logger
+import pro.smartum.pkpass.util.function.getHumanCategoryString
+import pro.smartum.pkpass.util.function.parseColor
+import pro.smartum.pkpass.util.function.readJSONSafely
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.Charset
@@ -29,75 +29,74 @@ object AppleStylePassReader {
 
         val pass = PassImpl(passFile.name)
 
-        var pass_json: JSONObject? = null
+        var passJson: JSONObject? = null
 
-        val localized_path = findLocalizedPath(passFile, language)
+        val localizedPath = findLocalizedPath(passFile, language)
 
-        if (localized_path != null) {
-            val file = File(localized_path, "pass.strings")
+        if (localizedPath != null) {
+            val file = File(localizedPath, "pass.strings")
             translation.loadFromFile(file)
         }
 
-        copyBitmapFile(passFile, localized_path, PassBitmapDefinitions.BITMAP_ICON)
-        copyBitmapFile(passFile, localized_path, PassBitmapDefinitions.BITMAP_LOGO)
-        copyBitmapFile(passFile, localized_path, PassBitmapDefinitions.BITMAP_STRIP)
-        copyBitmapFile(passFile, localized_path, PassBitmapDefinitions.BITMAP_THUMBNAIL)
-        copyBitmapFile(passFile, localized_path, PassBitmapDefinitions.BITMAP_FOOTER)
+        copyBitmapFile(passFile, localizedPath, PassBitmapDefinitions.BITMAP_ICON)
+        copyBitmapFile(passFile, localizedPath, PassBitmapDefinitions.BITMAP_LOGO)
+        copyBitmapFile(passFile, localizedPath, PassBitmapDefinitions.BITMAP_STRIP)
+        copyBitmapFile(passFile, localizedPath, PassBitmapDefinitions.BITMAP_THUMBNAIL)
+        copyBitmapFile(passFile, localizedPath, PassBitmapDefinitions.BITMAP_FOOTER)
 
         val file = File(passFile, "pass.json")
 
         try {
             val plainJsonString = AppleStylePassTranslation.readFileAsStringGuessEncoding(file)
-            pass_json = readJSONSafely(plainJsonString)
+            passJson = readJSONSafely(plainJsonString)
         } catch (e: Exception) {
             Logger.e(javaClass, "PassParse Exception", e)
         }
 
-        if (pass_json == null) {
+        if (passJson == null) {
             // I had got a strange passbook with UCS-2 which could not be parsed before
             // was searching for a auto-detection, but could not find one with support for this encoding
             // and the right license
 
             for (charset in Charset.availableCharsets().values) {
                 try {
-                    val json_str = file.bufferedReader(charset).readText()
-                    pass_json = readJSONSafely(json_str)
+                    val jsonStr = file.bufferedReader(charset).readText()
+                    passJson = readJSONSafely(jsonStr)
                 } catch (ignored: Exception) {
                     // we try with next charset
+                    ignored.printStackTrace()
                 }
 
-                if (pass_json != null) {
+                if (passJson != null)
                     break
-                }
             }
         }
 
-        if (pass_json == null) {
+        if (passJson == null) {
             Logger.e(javaClass, "could not load pass.json from passcode")
             return null
         }
 
         try {
-            val barcode_json = pass_json.getBarcodeJson()
-            if (barcode_json != null) {
-                val barcodeFormatString = barcode_json.getString("format")
+            val barcodeJson = passJson.getBarcodeJson()
+            if (barcodeJson != null) {
+                val barcodeFormatString = barcodeJson.getString("format")
 
                 val barcodeFormat = BarCode.getFormatFromString(barcodeFormatString)
-                val barCode = BarCode(barcodeFormat, barcode_json.getString("message"))
+                val barCode = BarCode(barcodeFormat, barcodeJson.getString("message"))
                 pass.barCode = barCode
 
-                if (barcode_json.has("altText")) {
-                    pass.barCode!!.alternativeText = barcode_json.getString("altText")
-                }
+                if (barcodeJson.has("altText"))
+                    pass.barCode!!.alternativeText = barcodeJson.getString("altText")
             }
             // TODO should check a bit more with barcode here - this can be dangerous
         } catch (ignored: Exception) {
             ignored.printStackTrace()
         }
 
-        if (pass_json.has("relevantDate")) {
+        if (passJson.has("relevantDate")) {
             try {
-                pass.calendarTimespan = PassImpl.TimeSpan(from = ZonedDateTime.parse(pass_json.getString("relevantDate")))
+                pass.calendarTimespan = PassImpl.TimeSpan(from = ZonedDateTime.parse(passJson.getString("relevantDate")))
             } catch (e: JSONException) {
                 // be robust when it comes to bad dates - had a RL crash with "2013-12-25T00:00-57:00" here
                 // OK then we just have no date here
@@ -105,28 +104,27 @@ object AppleStylePassReader {
             }
         }
 
-        if (pass_json.has("expirationDate")) {
+        if (passJson.has("expirationDate")) {
             try {
-                pass.validTimespans = listOf(PassImpl.TimeSpan(to = ZonedDateTime.parse(pass_json.getString("expirationDate"))))
+                pass.validTimespans = listOf(PassImpl.TimeSpan(to = ZonedDateTime.parse(passJson.getString("expirationDate"))))
             } catch (e: Exception) {
                 // be robust when it comes to bad dates - had a RL crash with "2013-12-25T00:00-57:00" here
                 // OK then we just have no date here
                 Logger.d(javaClass, "problem parsing expiration date")
             }
-
         }
 
-        pass.serial = readJsonSafeAsOptional(pass_json, "serialNumber")
-        pass.authToken = readJsonSafeAsOptional(pass_json, "authenticationToken")
-        pass.webServiceURL = readJsonSafeAsOptional(pass_json, "webServiceURL")
-        pass.passIdent = readJsonSafeAsOptional(pass_json, "passTypeIdentifier")
+        pass.serial = readJsonSafeAsOptional(passJson, "serialNumber")
+        pass.authToken = readJsonSafeAsOptional(passJson, "authenticationToken")
+        pass.webServiceURL = readJsonSafeAsOptional(passJson, "webServiceURL")
+        pass.passIdent = readJsonSafeAsOptional(passJson, "passTypeIdentifier")
 
         val locations = ArrayList<PassLocation>()
         try {
 
-            val locations_json = pass_json.getJSONArray("locations")
-            for (i in 0..locations_json.length() - 1) {
-                val obj = locations_json.getJSONObject(i)
+            val locationsJson = passJson.getJSONArray("locations")
+            for (i in 0..locationsJson.length() - 1) {
+                val obj = locationsJson.getJSONObject(i)
 
                 val location = PassLocation()
                 location.lat = obj.getDouble("latitude")
@@ -144,13 +142,13 @@ object AppleStylePassReader {
 
         pass.locations = locations
 
-        readJsonSafe(pass_json, "backgroundColor", object : JsonStringReadCallback {
+        readJsonSafe(passJson, "backgroundColor", object : JsonStringReadCallback {
             override fun onString(string: String) {
                 pass.accentColor = string.parseColor(Color.BLACK)
             }
         })
 
-        readJsonSafe(pass_json, "description", object : JsonStringReadCallback {
+        readJsonSafe(passJson, "description", object : JsonStringReadCallback {
             override fun onString(string: String) {
                 pass.description = translation.translate(string)
             }
@@ -160,14 +158,13 @@ object AppleStylePassReader {
         // try to find in a predefined set of tickets
 
         PassDefinitions.TYPE_TO_NAME.forEach {
-            if (pass_json!!.has(it.value)) {
+            if (passJson!!.has(it.value))
                 pass.type = it.key
-            }
         }
 
         try {
             val type = PassDefinitions.TYPE_TO_NAME[pass.type]
-            val type_json = pass_json.getJSONObject(type)
+            val type_json = passJson.getJSONObject(type)
             if (type_json != null) {
                 val fieldList: ArrayList<PassField> = ArrayList()
 
@@ -182,11 +179,12 @@ object AppleStylePassReader {
             }
 
         } catch (ignored: JSONException) {
+            ignored.printStackTrace()
         }
 
 
         try {
-            pass.creator = pass_json.getString("organizationName")
+            pass.creator = passJson.getString("organizationName")
         } catch (ignored: JSONException) {
             // ok - we have no organisation - big deal ..-)
             ignored.printStackTrace()
@@ -233,15 +231,13 @@ object AppleStylePassReader {
 
         val localized = File(path, language + ".lproj")
 
-        if (localized.exists() && localized.isDirectory) {
+        if (localized.exists() && localized.isDirectory)
             return localized.path
-        }
 
         val fallback = File(path, "en.lproj")
 
-        if (fallback.exists() && fallback.isDirectory) {
+        if (fallback.exists() && fallback.isDirectory)
             return fallback.path
-        }
 
         return null
     }

@@ -1,4 +1,4 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util.function
 
 import android.content.Context
 import android.net.Uri
@@ -8,30 +8,22 @@ import pro.smartum.pkpass.model.InputStreamWithSource
 import java.io.BufferedInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.net.MalformedURLException
 import java.net.URL
 
 val IPHONE_USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"
 
 fun fromURI(context: Context, uri: Uri): InputStreamWithSource? {
- //   App.tracker.trackEvent("protocol", "to_inputstream", uri.scheme, null)
     when (uri.scheme) {
         "content" ->
-
             return fromContent(context, uri)
-
         "http", "https" ->
             // TODO check if SPDY should be here
             return fromOKHttp(uri)
-
-        "file" -> return getDefaultInputStreamForUri(uri)
-        else -> {
-           // App.tracker.trackException("unknown scheme in ImportAsyncTask" + uri.scheme, false)
+        "file" ->
             return getDefaultInputStreamForUri(uri)
-        }
-
+        else ->
+            return getDefaultInputStreamForUri(uri)
     }
-
 }
 
 private fun fromOKHttp(uri: Uri): InputStreamWithSource? {
@@ -51,48 +43,37 @@ private fun fromOKHttp(uri: Uri): InputStreamWithSource? {
                 "eventbrite" to "//www.eventbrite.com/passes/order"
         )
 
-        for ((key, value) in iPhoneFakeMap) {
-            if (uri.toString().contains(value)) {
-                //App.tracker.trackEvent("quirk_fix", "ua_fake", key, null)
+        for ((key, value) in iPhoneFakeMap)
+            if (uri.toString().contains(value))
                 requestBuilder.header("User-Agent", IPHONE_USER_AGENT)
-            }
-        }
 
         val request = requestBuilder.build()
 
         val response = client.newCall(request).execute()
 
         return InputStreamWithSource(uri.toString(), response.body().byteStream())
-    } catch (e: MalformedURLException) {
+    } catch (e: Exception) {
         e.printStackTrace()
-        //App.tracker.trackException("MalformedURLException in ImportAsyncTask", e, false)
-    } catch (e: IOException) {
-        e.printStackTrace()
-        //App.tracker.trackException("IOException in ImportAsyncTask", e, false)
     }
 
     return null
 }
 
 private fun fromContent(ctx: Context, uri: Uri): InputStreamWithSource? {
-    try {
-        return InputStreamWithSource(uri.toString(), ctx.contentResolver.openInputStream(uri)!!)
+    return try {
+        InputStreamWithSource(uri.toString(), ctx.contentResolver.openInputStream(uri)!!)
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
-        //App.tracker.trackException("FileNotFoundException in passImportActivity/ImportAsyncTask", e, false)
-        return null
+        null
     }
-
 }
 
 
 private fun getDefaultInputStreamForUri(uri: Uri): InputStreamWithSource? {
-    try {
-        return InputStreamWithSource(uri.toString(), BufferedInputStream(URL(uri.toString()).openStream(), 4096))
+    return try {
+        InputStreamWithSource(uri.toString(), BufferedInputStream(URL(uri.toString()).openStream(), 4096))
     } catch (e: IOException) {
         e.printStackTrace()
-        //App.tracker.trackException("IOException in passImportActivity/ImportAsyncTask", e, false)
-        return null
+        null
     }
-
 }

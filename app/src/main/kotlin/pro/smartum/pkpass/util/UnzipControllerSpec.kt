@@ -1,9 +1,9 @@
-package pro.smartum.pkpass.function
+package pro.smartum.pkpass.util
 
 import android.content.Context
 import pro.smartum.pkpass.app.App
-import pro.smartum.pkpass.function.UnzipPassController.FailCallback
-import pro.smartum.pkpass.function.UnzipPassController.SuccessCallback
+import pro.smartum.pkpass.util.UnzipPassController.FailCallback
+import pro.smartum.pkpass.util.UnzipPassController.SuccessCallback
 import pro.smartum.pkpass.storage.PassStore
 import java.io.File
 

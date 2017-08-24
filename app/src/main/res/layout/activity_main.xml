@@ -7,7 +7,7 @@
     tools:context="pro.smartum.pkpass.activity.MainActivity">
 
     <fragment
-        android:id="@+id/pass_fragment"
+        android:id="@+id/vPassFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="pro.smartum.pkpass.ui.fragment.PassListFragment"/>

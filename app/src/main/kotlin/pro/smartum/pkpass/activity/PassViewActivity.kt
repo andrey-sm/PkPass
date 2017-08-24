@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_pass.*
 import kotlinx.android.synthetic.main.pass_view_extra_data.*
 import pro.smartum.pkpass.R
 import pro.smartum.pkpass.app.App.Companion.passStore
+import pro.smartum.pkpass.app.KEY_IMAGE
 import pro.smartum.pkpass.model.PassBitmapDefinitions
 import pro.smartum.pkpass.model.pass.Pass
 import pro.smartum.pkpass.ui.adapter.holder.VerbosePassViewHolder
@@ -26,14 +27,14 @@ import pro.smartum.pkpass.util.helper.PassViewHelper
 
 class PassViewActivity : PassViewActivityBase() {
 
-    val mPassViewHelper by lazy { PassViewHelper(this) }
+    private val mPassViewHelper by lazy { PassViewHelper(this) }
 
     internal fun processImage(view: ImageView, name: String, pass: Pass) {
         val bitmap = pass.getBitmap(mPassStore, name)
         if (bitmap != null && bitmap.width > 300) {
             view.setOnClickListener {
                 val intent = Intent(view.context, TouchImageActivity::class.java)
-                intent.putExtra("IMAGE", name)
+                intent.putExtra(KEY_IMAGE, name)
                 startActivity(intent)
             }
         }
@@ -45,29 +46,29 @@ class PassViewActivity : PassViewActivityBase() {
 
         BarcodeUIController(findViewById(android.R.id.content), currentPass.barCode, this, mPassViewHelper)
 
-        processImage(logo_img_view, PassBitmapDefinitions.BITMAP_LOGO, currentPass)
-        processImage(footer_img_view, PassBitmapDefinitions.BITMAP_FOOTER, currentPass)
-        processImage(thumbnail_img_view, PassBitmapDefinitions.BITMAP_THUMBNAIL, currentPass)
-        processImage(strip_img_view, PassBitmapDefinitions.BITMAP_STRIP, currentPass)
+        processImage(vLogoImgView, PassBitmapDefinitions.BITMAP_LOGO, currentPass)
+        processImage(vFooterImgView, PassBitmapDefinitions.BITMAP_FOOTER, currentPass)
+        processImage(vThumbnailImgView, PassBitmapDefinitions.BITMAP_THUMBNAIL, currentPass)
+        processImage(vStripImgView, PassBitmapDefinitions.BITMAP_STRIP, currentPass)
 
-        if (map_container != null && !(currentPass.locations.isNotEmpty()))
-            map_container.visibility = View.GONE
+        if (vMapContainer != null && !(currentPass.locations.isNotEmpty()))
+            vMapContainer.visibility = View.GONE
 
         val backStr = StringBuilder()
 
-        front_field_container.removeAllViews()
+        vFrontFieldContainer.removeAllViews()
 
         for (field in currentPass.fields) {
             if (field.hide) {
                 backStr.append(field.toHtmlSnippet())
             } else {
-                val v = layoutInflater.inflate(R.layout.main_field_item, front_field_container, false)
-                val key = v.findViewById(R.id.key) as TextView
+                val v = layoutInflater.inflate(R.layout.main_field_item, vFrontFieldContainer, false)
+                val key = v.findViewById(R.id.vKey) as TextView
                 key.text = field.label
-                val value = v.findViewById(R.id.value) as TextView
+                val value = v.findViewById(R.id.vValue) as TextView
                 value.text = field.value
 
-                front_field_container.addView(v)
+                vFrontFieldContainer.addView(v)
                 LinkifyCompat.addLinks(key, Linkify.ALL)
                 LinkifyCompat.addLinks(value, Linkify.ALL)
             }
@@ -75,11 +76,11 @@ class PassViewActivity : PassViewActivityBase() {
 
 
         if (backStr.isNotEmpty()) {
-            back_fields.text = HtmlCompat.fromHtml(backStr.toString())
-            moreTextView.visibility = View.VISIBLE
-        } else moreTextView.visibility = View.GONE
+            vBackFields.text = HtmlCompat.fromHtml(backStr.toString())
+            vMoreTextView.visibility = View.VISIBLE
+        } else vMoreTextView.visibility = View.GONE
 
-        LinkifyCompat.addLinks(back_fields, Linkify.ALL)
+        LinkifyCompat.addLinks(vBackFields, Linkify.ALL)
 
         val passViewHolder = VerbosePassViewHolder(pass_card)
         passViewHolder.apply(currentPass, passStore, this)
@@ -89,25 +90,25 @@ class PassViewActivity : PassViewActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ////////////////////////////////disableRotation()
+        // disableRotation()
 
         setContentView(R.layout.activity_pass_view)
 
-        val passExtrasView = layoutInflater.inflate(R.layout.pass_view_extra_data, passExtrasContainer, false)
-        passExtrasContainer.addView(passExtrasView)
+        val passExtrasView = layoutInflater.inflate(R.layout.pass_view_extra_data, vPassExtrasContainer, false)
+        vPassExtrasContainer.addView(passExtrasView)
 
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
 
-        moreTextView.setOnClickListener {
-            if (back_fields.visibility == View.VISIBLE) {
-                back_fields.visibility = View.GONE
-                moreTextView.setText(R.string.more)
+        vMoreTextView.setOnClickListener {
+            if (vBackFields.visibility == View.VISIBLE) {
+                vBackFields.visibility = View.GONE
+                vMoreTextView.setText(R.string.more)
             } else {
-                back_fields.visibility = View.VISIBLE
-                moreTextView.setText(R.string.less)
+                vBackFields.visibility = View.VISIBLE
+                vMoreTextView.setText(R.string.less)
             }
         }
 
@@ -115,7 +116,7 @@ class PassViewActivity : PassViewActivityBase() {
 //            startActivityFromClass(FullscreenBarcodeActivity::class.java)
 //        }
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(vToolbar)
 
         configureActionBar()
         refresh()

@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import pro.smartum.pkpass.R
-import pro.smartum.pkpass.function.getSizeAsPointCompat
+import pro.smartum.pkpass.util.function.getSizeAsPointCompat
 
 class PassViewHelper(private val context: Activity) {
 

@@ -15,10 +15,10 @@ open class VerbosePassViewHolder(view: CardView) : PassViewHolder(view) {
         val stringToSetForDateOrExtraText = getTimeInfoString(pass) ?: getExtraString(pass)
 
         if (stringToSetForDateOrExtraText != null && !stringToSetForDateOrExtraText.isEmpty()) {
-            view.date.text = stringToSetForDateOrExtraText
-            view.date.visibility = View.VISIBLE
+            view.vDate.text = stringToSetForDateOrExtraText
+            view.vDate.visibility = View.VISIBLE
         } else {
-            view.date.visibility = View.GONE
+            view.vDate.visibility = View.GONE
         }
     }
 }

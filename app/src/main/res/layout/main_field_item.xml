@@ -6,23 +6,23 @@
     android:orientation="horizontal">
 
     <TextView
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:id="@+id/vKey"
         android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif"
         android:gravity="right"
         android:paddingRight="4dp"
-        android:fontFamily="sans-serif"
         android:textSize="18sp"
-        tools:text="Key"
-        android:id="@+id/key" />
+        tools:text="Key" />
 
     <TextView
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:id="@+id/vValue"
         android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:fontFamily="sans-serif-light"
         android:paddingLeft="4dp"
         android:textSize="18sp"
-        tools:text="Value"
-        android:id="@+id/value" />
+        tools:text="Value" />
 </LinearLayout>

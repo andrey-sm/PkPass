@@ -9,7 +9,7 @@ import pro.smartum.pkpass.R
 import pro.smartum.pkpass.activity.PassViewActivity
 import pro.smartum.pkpass.app.App
 import pro.smartum.pkpass.app.Settings
-import pro.smartum.pkpass.function.startActivityFromClass
+import pro.smartum.pkpass.util.function.startActivityFromClass
 import pro.smartum.pkpass.storage.PassStore
 import pro.smartum.pkpass.storage.PassStoreProjection
 import pro.smartum.pkpass.ui.adapter.holder.CondensedPassViewHolder

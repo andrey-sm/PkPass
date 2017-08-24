@@ -16,11 +16,10 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/pass_top"
+            android:id="@+id/vPassTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
 
             <LinearLayout
                 android:layout_width="0dip"
@@ -31,7 +30,7 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/vDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -39,11 +38,10 @@
                     tools:text="12.10.2013 17:00" />
 
                 <TextView
-                    android:id="@+id/passTitle"
+                    android:id="@+id/vPassTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="4dp"
-
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="Title" />
@@ -51,19 +49,17 @@
             </LinearLayout>
 
             <pro.smartum.pkpass.ui.views.CategoryIndicatorViewWithIcon
-                android:id="@+id/categoryView"
+                android:id="@+id/vCategoryView"
                 android:layout_width="48dp"
                 android:layout_height="74dp"
                 android:layout_gravity="center"
                 android:layout_margin="8dp" />
         </LinearLayout>
 
-
         <View
-            android:id="@+id/actionsSeparator"
+            android:id="@+id/vActionsSeparator"
             android:layout_width="match_parent"
             android:layout_height="2dip"
-
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
@@ -72,17 +68,16 @@
             android:padding="7dp" />
 
         <pro.smartum.pkpass.ui.views.TimeAndNavBar
-            android:id="@+id/timeAndNavBar"
+            android:id="@+id/vTimeAndNavBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <LinearLayout
-            android:id="@+id/passExtrasContainer"
+            android:id="@+id/vPassExtrasContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
     </LinearLayout>
-
 
 </android.support.v7.widget.CardView>
