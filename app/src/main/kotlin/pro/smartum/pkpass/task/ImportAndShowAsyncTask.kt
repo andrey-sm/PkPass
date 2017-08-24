@@ -54,8 +54,6 @@ internal class ImportAndShowAsyncTask(val passImportActivity: PassImportActivity
             val passbookForId = passImportActivity.mPassStore.getPassbookForId(id)
             passImportActivity.mPassStore.currentPass = passbookForId
 
-            passImportActivity.mPassStore.classifier.moveToTopic(passbookForId!!, passImportActivity.getString(R.string.topic_new))
-
             passImportActivity.startActivityFromClass(PassViewActivity::class.java)
             passImportActivity.finish()
         }

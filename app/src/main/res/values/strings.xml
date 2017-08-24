@@ -2,7 +2,6 @@
     <string name="app_name">PkPass</string>
 
     <string name="please_wait">please wait - shouldn\'t be long</string>
-    <string name="topic_new">new</string>
 
     <string name="image_import">Image Import</string>
     <string name="pdf_import">PDF Import</string>

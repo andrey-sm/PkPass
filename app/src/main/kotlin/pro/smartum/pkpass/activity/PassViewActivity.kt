@@ -26,7 +26,7 @@ import pro.smartum.pkpass.util.helper.PassViewHelper
 
 class PassViewActivity : PassViewActivityBase() {
 
-    val passViewHelper by lazy { PassViewHelper(this) }
+    val mPassViewHelper by lazy { PassViewHelper(this) }
 
     internal fun processImage(view: ImageView, name: String, pass: Pass) {
         val bitmap = pass.getBitmap(mPassStore, name)
@@ -37,13 +37,13 @@ class PassViewActivity : PassViewActivityBase() {
                 startActivity(intent)
             }
         }
-        passViewHelper.setBitmapSafe(view, bitmap)
+        mPassViewHelper.setBitmapSafe(view, bitmap)
     }
 
     override fun refresh() {
         super.refresh()
 
-        BarcodeUIController(findViewById(android.R.id.content), currentPass.barCode, this, passViewHelper)
+        BarcodeUIController(findViewById(android.R.id.content), currentPass.barCode, this, mPassViewHelper)
 
         processImage(logo_img_view, PassBitmapDefinitions.BITMAP_LOGO, currentPass)
         processImage(footer_img_view, PassBitmapDefinitions.BITMAP_FOOTER, currentPass)

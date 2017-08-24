@@ -100,7 +100,6 @@ object UnzipPassController {
                 File(spec.zipFileString).copyTo(File(pathForID, "strip.png"))
 
                 spec.passStore.save(imagePass)
-                spec.passStore.classifier.moveToTopic(imagePass, "new")
                 spec.onSuccessCallback?.call(imagePass.id)
                 return
             }
@@ -127,14 +126,10 @@ object UnzipPassController {
                         createBitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(File(pathForID, "strip.png")))
 
                         spec.passStore.save(imagePass)
-                        spec.passStore.classifier.moveToTopic(imagePass, "new")
                         spec.onSuccessCallback?.call(imagePass.id)
                         return
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
+                } catch (e: Exception) { e.printStackTrace() }
             }
 
             spec.failCallback?.fail("Pass is not espass or pkpass format :-(")

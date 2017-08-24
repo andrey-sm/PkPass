@@ -6,7 +6,6 @@ import com.squareup.moshi.Moshi
 import okio.Okio
 import pro.smartum.pkpass.BuildConfig
 import pro.smartum.pkpass.app.Settings
-import pro.smartum.pkpass.function.PassClassifier
 import pro.smartum.pkpass.model.pass.Pass
 import pro.smartum.pkpass.model.pass.PassImpl
 import pro.smartum.pkpass.reader.AppleStylePassReader
@@ -15,26 +14,20 @@ import pro.smartum.pkpass.util.Logger
 import java.io.File
 import java.util.*
 
-class AndroidFileSystemPassStore(private val context: Context, settings: Settings, private val moshi: Moshi/*, private val bus: EventBus*/) : PassStore {
+class AndroidFileSystemPassStore(private val context: Context, settings: Settings, private val moshi: Moshi) : PassStore {
     private val path: File = settings.getPassesDir()
 
     override val passMap = HashMap<String, Pass>()
 
     override var currentPass: Pass? = null
 
-    override val classifier: PassClassifier by lazy {
-        val classificationFile = File(settings.getStateDir(), "classifier_state.json")
-        FileBackedPassClassifier(classificationFile, this, moshi)
-    }
-
     override fun save(pass: Pass) {
         val jsonAdapter = moshi.adapter(PassImpl::class.java)
 
         val pathForID = getPathForID(pass.id)
 
-        if (!pathForID.exists()) {
+        if (!pathForID.exists())
             pathForID.mkdirs()
-        }
 
         val buffer = Okio.buffer(Okio.sink(File(pathForID, "main.json")))
 
@@ -56,9 +49,8 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
         val pathForID = getPathForID(id)
         val language = context.resources.configuration.locale.language
 
-        if (!pathForID.exists() || !pathForID.isDirectory) {
+        if (!pathForID.exists() || !pathForID.isDirectory)
             return null
-        }
 
         val file = File(pathForID, "main.json")
         var result: Pass? = null
@@ -79,14 +71,12 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
             File(pathForID, "data.json").delete()
         }
 
-        if (result == null && File(pathForID, "pass.json").exists()) {
+        if (result == null && File(pathForID, "pass.json").exists())
             result = AppleStylePassReader.read(pathForID, language, context)
-        }
 
         if (result != null) {
-            if (dirty) {
+            if (dirty)
                 save(result)
-            }
             passMap.put(id, result)
             notifyChange()
         }
@@ -102,7 +92,6 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
         val result = getPathForID(id).deleteRecursively()
         if (result) {
             passMap.remove(id)
-            classifier.removePass(id)
             notifyChange()
         }
         return result
@@ -113,17 +102,4 @@ class AndroidFileSystemPassStore(private val context: Context, settings: Setting
     }
 
     override fun notifyChange() {}
-
-    override fun syncPassStoreWithClassifier(defaultTopic: String) {
-        val keysToRemove = classifier.topicByIdMap.keys.filter { getPassbookForId(it) == null }
-
-        for (key in keysToRemove) {
-            classifier.topicByIdMap.remove(key)
-        }
-
-        val allPasses = path.listFiles()
-        allPasses?.forEach {
-            classifier.getTopic(it.name, defaultTopic)
-        }
-    }
 }

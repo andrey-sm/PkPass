@@ -1,25 +1,31 @@
 package pro.smartum.pkpass.storage
 
+import pro.smartum.pkpass.app.App
 import pro.smartum.pkpass.model.comparator.PassSortOrder
 import pro.smartum.pkpass.model.pass.Pass
+import java.io.File
 import java.util.*
 
 
-class PassStoreProjection(private val passStore: PassStore, val topic: String, private val passSortOrder: PassSortOrder? = null) {
+class PassStoreProjection(private val passStore: PassStore, private val passSortOrder: PassSortOrder? = null) {
 
-    var passList: List<Pass> = ArrayList<Pass>()
+    var passList: MutableList<Pass> = ArrayList<Pass>()
         private set
 
-    init {
-        refresh()
-    }
+    init { refresh() }
 
-    fun refresh() {
-        val newPassList = passStore.classifier.getPassListByTopic(topic)
-        if (passSortOrder != null) {
-            Collections.sort(newPassList, passSortOrder.toComparator())
+    private fun refresh() {
+        val path: File = App.settings.getPassesDir()
+        val allPasses = path.listFiles()
+
+        passList.clear()
+        allPasses?.forEach {
+            var pass = passStore.getPassbookForId(it.name)
+            if(pass != null)
+                passList.add(pass)
         }
 
-        passList = newPassList
+        if (passSortOrder != null)
+            Collections.sort(passList, passSortOrder.toComparator())
     }
 }

@@ -25,8 +25,8 @@ class PassListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // FIXME Remove 'new' arg
-        mPassStoreProjection = PassStoreProjection(mPassStore, "new", mSettings.getSortOrder())
+
+        mPassStoreProjection = PassStoreProjection(mPassStore, mSettings.getSortOrder())
         mAdapter = PassAdapter(activity as AppCompatActivity, mPassStoreProjection)
     }
 
