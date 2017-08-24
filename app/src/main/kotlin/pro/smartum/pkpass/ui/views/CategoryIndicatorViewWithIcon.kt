@@ -21,14 +21,14 @@ class CategoryIndicatorViewWithIcon @JvmOverloads constructor(context: Context, 
 
     fun setImageByCategory(category: PassType?) {
         if (category == null)
-            topImageView.visibility = View.GONE
+            vTopImageView.visibility = View.GONE
         else {
-            topImageView.visibility = View.VISIBLE
-            topImageView.setImageResource(getCategoryTopImageRes(category))
+            vTopImageView.visibility = View.VISIBLE
+            vTopImageView.setImageResource(getCategoryTopImageRes(category))
         }
     }
 
-    fun setIcon(iconBitmap: Bitmap) = iconImageView.setImageBitmap(iconBitmap)
+    fun setIcon(iconBitmap: Bitmap) = vIconImageView.setImageBitmap(iconBitmap)
 
     fun setAccentColor(color: Int) = setBackgroundColor(color)
 }

@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.pass_recycler.view.*
+import kotlinx.android.synthetic.main.fragment_pass_list.view.*
 import pro.smartum.pkpass.R
 import pro.smartum.pkpass.app.App
 import pro.smartum.pkpass.app.Settings
@@ -31,10 +31,10 @@ class PassListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.pass_recycler, container, false)
+        val view = inflater.inflate(R.layout.fragment_pass_list, container, false)
 
-        view.pass_recyclerview.adapter = mAdapter
-        view.pass_recyclerview.layoutManager = LinearLayoutManager(activity)
+        view.vPassRecyclerView.adapter = mAdapter
+        view.vPassRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         return view
     }

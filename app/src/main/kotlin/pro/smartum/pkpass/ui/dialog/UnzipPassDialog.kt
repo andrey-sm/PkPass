@@ -4,12 +4,12 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.support.v7.app.AlertDialog
 import pro.smartum.pkpass.R
-import pro.smartum.pkpass.function.UnzipPassController
-import pro.smartum.pkpass.function.UnzipPassController.FailCallback
-import pro.smartum.pkpass.function.UnzipPassController.InputStreamUnzipControllerSpec
-import pro.smartum.pkpass.function.UnzipPassController.SuccessCallback
 import pro.smartum.pkpass.model.InputStreamWithSource
 import pro.smartum.pkpass.storage.PassStore
+import pro.smartum.pkpass.util.UnzipPassController
+import pro.smartum.pkpass.util.UnzipPassController.FailCallback
+import pro.smartum.pkpass.util.UnzipPassController.InputStreamUnzipControllerSpec
+import pro.smartum.pkpass.util.UnzipPassController.SuccessCallback
 
 object UnzipPassDialog {
 
