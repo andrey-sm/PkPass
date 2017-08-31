@@ -3,6 +3,9 @@ package pro.smartum.pkpass.util.function
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Build
@@ -66,6 +69,30 @@ fun WindowManager.getLargestSide(): Int {
 fun WindowManager.getSmallestSide(): Int {
     val sizeAsPoint = getSizeAsPointCompat()
     return Math.min(sizeAsPoint.x, sizeAsPoint.y)
+}
+
+fun Activity.lockOrientation(orientation: Int) {
+    when (orientation) {
+        ORIENTATION_PORTRAIT -> if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.FROYO) {
+            this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            val rotation = this.windowManager.defaultDisplay.rotation
+            if (rotation == android.view.Surface.ROTATION_90 || rotation == android.view.Surface.ROTATION_180)
+                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+            else
+                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+        ORIENTATION_LANDSCAPE -> if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.FROYO) {
+            this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            val rotation = this.windowManager.defaultDisplay.rotation
+            if (rotation == android.view.Surface.ROTATION_0 || rotation == android.view.Surface.ROTATION_90)
+                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else
+                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+        }
+    }//when
 }
 
 fun Context.startActivityFromClass(activityClass: Class<out Activity>) = startActivity(Intent(this, activityClass))

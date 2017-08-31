@@ -37,6 +37,10 @@
         <activity android:name=".activity.TouchImageActivity"/>
 
         <activity
+            android:name=".activity.FullscreenBarcodeActivity"
+            android:label="@string/app_name"/>
+
+        <activity
             android:name=".activity.PassViewActivity"
             android:theme="@style/AppBaseThemeNoActionbar"
             android:label="@string/app_name"

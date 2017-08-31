@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_pass_view.*
 import kotlinx.android.synthetic.main.activity_pass_view_base.*
+import kotlinx.android.synthetic.main.barcode.*
 import kotlinx.android.synthetic.main.item_pass.*
 import kotlinx.android.synthetic.main.pass_view_extra_data.*
 import pro.smartum.pkpass.R
@@ -22,6 +23,7 @@ import pro.smartum.pkpass.model.PassBitmapDefinitions
 import pro.smartum.pkpass.model.pass.Pass
 import pro.smartum.pkpass.ui.adapter.holder.VerbosePassViewHolder
 import pro.smartum.pkpass.util.HtmlCompat
+import pro.smartum.pkpass.util.function.startActivityFromClass
 import pro.smartum.pkpass.util.helper.BarcodeUIController
 import pro.smartum.pkpass.util.helper.PassViewHelper
 
@@ -112,9 +114,9 @@ class PassViewActivity : PassViewActivityBase() {
             }
         }
 
-//        barcode_img.setOnClickListener {
-//            startActivityFromClass(FullscreenBarcodeActivity::class.java)
-//        }
+        vBarcodeImg.setOnClickListener {
+            startActivityFromClass(FullscreenBarcodeActivity::class.java)
+        }
 
         setSupportActionBar(vToolbar)
 
